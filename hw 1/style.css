@@ -1,0 +1,63 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h3 {
+    color: darkblue;
+}
+
+header, footer {
+    background-color: grey;
+    text-align: right;
+}
+.cart-button {
+    padding: 5px 10px;
+    color: blue;
+}
+
+.cart {
+    margin-bottom: 50px;
+    padding: 20px 0;
+    border: 1px solid gray;
+    display: none;
+}
+.cart > figure {
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.catalog {
+    text-align: center;
+}
+
+.box_cards {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 150px;
+    height: 250px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #000;
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+
+
