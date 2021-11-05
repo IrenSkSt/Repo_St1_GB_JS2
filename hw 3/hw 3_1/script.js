@@ -3,7 +3,7 @@
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/';
 
 // Универсальная функция отправки/получения данных с сервером
-function send(onError, onSuccess, url, method = 'GET', data = {}, headers = {}, timeout = 15000) {
+function send(onError, onSuccess, url, method = 'GET', headers = {}, timeout = 15000) {
 
     let xhr;
 
@@ -35,6 +35,7 @@ function send(onError, onSuccess, url, method = 'GET', data = {}, headers = {}, 
         if (xhr.readyState === 4) {
             if (xhr.status < 400) {
                 onSuccess(xhr.responseText);
+                // console.log(xhr.responseText); // для проверки
             } else if (xhr.status >= 400) {
                 onError(xhr.responseText);
             }
@@ -42,31 +43,50 @@ function send(onError, onSuccess, url, method = 'GET', data = {}, headers = {}, 
 
     }
 
-    xhr.send(data);
+    xhr.send();
     console.log(xhr); // для проверки
 }
+let goods;
 
 
-// готовый код ----------
-class GoodsList {
-    constructor() {
-        // this.list = [];
-        // console.log(goods); // для проверки
-    }
+send(
+    (err) => {
+        console.log(err.text)
+    },
+    (request) => {
+        goods = JSON.parse(request).map(good => ({ title: good.product_name, price: good.price })) // формируем массив из полученных данных
+        console.log(goods); // для проверки
 
-    fetchGoods() {
-        send(
-            (err) => {
-                console.log(err.text)
-            },
-            (request) => {
-                this.goods = JSON.parse(request).map(good => ({ title: good.product_name, price: good.price }))
-            }, // формируем массив из полученных данных
-            `${API_URL}catalogData.json`
-        )
-        //console.log(goods); // для проверки
-    }
-}
+        renderGoodsList(); // формирование карточек товаров
+
+
+    },
+    `${API_URL}catalogData.json`
+)
+// console.log(goods); // для проверки
+
+
+
+// готовый код ----------/не мой/
+// class GoodsList {
+//     constructor() {
+//         this.goods = [];
+//         // console.log(goods); // для проверки
+//     }
+
+//     fetchGoods() {
+//         send(
+//             (err) => {
+//                 console.log(err.text)
+//             },
+//             (request) => {
+//                 this.goods = JSON.parse(request).map(good => ({ title: good.product_name, price: good.price }))
+//             }, // формируем массив из полученных данных
+//             `${API_URL}catalogData.json`
+//         )
+//         //console.log(goods); // для проверки
+//     }
+// }
 
 //------------------
 
@@ -79,9 +99,11 @@ class GoodsList {
 // ];
 // console.log(goods); // для проверки
 
-const goods = new GoodsList();
-goods.fetchGoods();
-console.log(goods); // для проверки
+// // const list = new GoodsList();
+// // list.fetchGoods();
+// // console.log(list); // для проверки
+// // const goods = list.goods;
+// // console.log(goods); // для проверки
 
 // Формируются карточки товаров в блоке товаров
 const $catalog = document.querySelector('.box_cards'); //блок товаров
@@ -91,20 +113,20 @@ const renderGoodsItem = ({ title, price }) => {
 }
 
 const renderGoodsList = (list = goods) => {
-    let goodsList = list.map(
+    let goodsCardsList = list.map(
         (item) => {
             return renderGoodsItem(item);
         }
     ).join('');
 
-    $catalog.insertAdjacentHTML('beforeend', goodsList);
+    $catalog.insertAdjacentHTML('beforeend', goodsCardsList);
 }
 
-renderGoodsList();
+// renderGoodsList();
 //-----------------------------------------------------
 
 
-//++++ Добавлен расчет общей стоимости товара на складе - Задание 2
+//++++ Добавлен расчет общей стоимости товара на складе 
 const priceList = goods.map((item) => {
     // console.log(item.price); // для проверки
     return item.price;
