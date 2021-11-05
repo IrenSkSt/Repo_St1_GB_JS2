@@ -46,8 +46,8 @@ function send(onError, onSuccess, url, method = 'GET', headers = {}, timeout = 1
     xhr.send();
     console.log(xhr); // для проверки
 }
-let goods;
 
+let goods;
 
 send(
     (err) => {
@@ -58,7 +58,6 @@ send(
         console.log(goods); // для проверки
 
         renderGoodsList(); // формирование карточек товаров
-
 
     },
     `${API_URL}catalogData.json`
@@ -126,133 +125,133 @@ const renderGoodsList = (list = goods) => {
 //-----------------------------------------------------
 
 
-//++++ Добавлен расчет общей стоимости товара на складе 
-const priceList = goods.map((item) => {
-    // console.log(item.price); // для проверки
-    return item.price;
-});
+// //++++ Добавлен расчет общей стоимости товара на складе 
+// const priceList = goods.map((item) => {
+//     // console.log(item.price); // для проверки
+//     return item.price;
+// });
 
-let goodsSumCounter;
-function SumCounter(items) {
-    goodsSumCounter = items.reduce((prev, cur) => {
-        return prev + cur;
-    })
-};
-SumCounter(priceList);
+// let goodsSumCounter;
+// function SumCounter(items) {
+//     goodsSumCounter = items.reduce((prev, cur) => {
+//         return prev + cur;
+//     })
+// };
+// // SumCounter(priceList);
 
-console.log("Общая стоимость товара на складе = " + goodsSumCounter + " долл.США");
-//-----------------------------------------------------
-
-
-// Перейти в корзину или Показать корзину по нажатия кнопки "Корзина" - повторное нажатие =скрыть
-let isOpenCart = false;
-function showCart() { // запускается по клику на кнопку Корзина 
-    // console.log(this); // для проверки
-    if (!isOpenCart) {
-        document.querySelector('.cart').style.display = 'block';
-        isOpenCart = true;
-    } else {
-        document.querySelector('.cart').style.display = 'none';
-        isOpenCart = false;
-    }
-}
-const openCart = document.querySelector('.cart-button').onclick = showCart; // открывается блок Корзины
+// console.log("Общая стоимость товара на складе = " + goodsSumCounter + " долл.США");
+// //-----------------------------------------------------
 
 
-// на кнопку Купить
-function showBuy() { // запускается по клику на кнопку Купить 
-    // console.log(this); // для проверки
-    if (!isOpenCart) {
-        document.querySelector('.cart').style.display = 'block';
-        isOpenCart = true;
-    }
-}
-//-----------------------------------------------------
+// // Перейти в корзину или Показать корзину по нажатия кнопки "Корзина" - повторное нажатие =скрыть
+// let isOpenCart = false;
+// function showCart() { // запускается по клику на кнопку Корзина 
+//     // console.log(this); // для проверки
+//     if (!isOpenCart) {
+//         document.querySelector('.cart').style.display = 'block';
+//         isOpenCart = true;
+//     } else {
+//         document.querySelector('.cart').style.display = 'none';
+//         isOpenCart = false;
+//     }
+// }
+// const openCart = document.querySelector('.cart-button').onclick = showCart; // открывается блок Корзины
 
 
-// Пользователь по клику на кнопку "Купить" добавляет товар в корзину
-
-const $cart = document.querySelector('.cart'); //блок корзины
-const $cardsList = document.getElementsByClassName("card"); // коллекция карточек товаров
-// console.log($cardsList); // для проверки
-let cart = []; // пустая корзина
-
-
-//++++ Добавлен расчет общей стоимости товара в корзине  - аналогично как стоимость остатков на складе
-let buySumCounter = 0;
-function buySum(buys) {
-    const coustList = buys.map((pos) => {
-        // console.log(pos.price); // для проверки
-        return pos.price;
-    });
-    function coustSum(pos) {
-        buySumCounter = pos.reduce((prev, cur) => {
-            return prev + cur;
-        })
-    };
-    coustSum(coustList);
-}
-
-var totalBuy = document.querySelector('p');
-//-----------------------------------------------------
+// // на кнопку Купить
+// function showBuy() { // запускается по клику на кнопку Купить 
+//     // console.log(this); // для проверки
+//     if (!isOpenCart) {
+//         document.querySelector('.cart').style.display = 'block';
+//         isOpenCart = true;
+//     }
+// }
+// //-----------------------------------------------------
 
 
-const renderCartPosition = ({ title, price }) => { // позиция покупки в блоке корзины
-    // console.log(title, price); // для проверки
-    return `<figure ><h3>${title}</h3> <p>1 шт. * ${price} долл.США = ${price} долл.США</p > </figure > `; // добавить потом кнопку удаления товара из корзины <button class="cart_delete">Удалить</button> + id="pos_${indexGood}"
-}
+// // Пользователь по клику на кнопку "Купить" добавляет товар в корзину
 
-function renderCartList(indexGood) {
-    cart[indexGood] = goods[indexGood];
-    //console.log(cart[indexGood].title); // для проверки
-    buySum(cart);
-    // console.log("Общая стоимость покупки = " + buySumCounter + " долл.США"); // для проверки
-    totalBuy.innerText = "Общая стоимость Ваших покупок составляет = " + buySumCounter + " "; // добавили стоимость всех покупок в корзине
-    totalBuy.innerHTML += "&#36;";
-    totalBuy.style.color = "blue";
-    // console.log(totalBuy); // для проверки
-
-    return renderCartPosition(cart[indexGood], cart[indexGood]);
-
-}
-//--------------------------------------------------------------
+// const $cart = document.querySelector('.cart'); //блок корзины
+// const $cardsList = document.getElementsByClassName("card"); // коллекция карточек товаров
+// // console.log($cardsList); // для проверки
+// let cart = []; // пустая корзина
 
 
+// //++++ Добавлен расчет общей стоимости товара в корзине  - аналогично как стоимость остатков на складе
+// let buySumCounter = 0;
+// function buySum(buys) {
+//     const coustList = buys.map((pos) => {
+//         // console.log(pos.price); // для проверки
+//         return pos.price;
+//     });
+//     function coustSum(pos) {
+//         buySumCounter = pos.reduce((prev, cur) => {
+//             return prev + cur;
+//         })
+//     };
+//     coustSum(coustList);
+// }
+
+// var totalBuy = document.querySelector('p');
+// //-----------------------------------------------------
 
 
-for (var item of $cardsList) {
+// const renderCartPosition = ({ title, price }) => { // позиция покупки в блоке корзины
+//     // console.log(title, price); // для проверки
+//     return `<figure ><h3>${title}</h3> <p>1 шт. * ${price} долл.США = ${price} долл.США</p > </figure > `; // добавить потом кнопку удаления товара из корзины <button class="cart_delete">Удалить</button> + id="pos_${indexGood}"
+// }
 
-    item.querySelector('.add-cart').onclick = function () {
-        // console.log(this); // для проверки
-        this.style.color = "brown"; //если товар добавили в корзину хоть один раз, то меняет цвет
+// function renderCartList(indexGood) {
+//     cart[indexGood] = goods[indexGood];
+//     //console.log(cart[indexGood].title); // для проверки
+//     buySum(cart);
+//     // console.log("Общая стоимость покупки = " + buySumCounter + " долл.США"); // для проверки
+//     totalBuy.innerText = "Общая стоимость Ваших покупок составляет = " + buySumCounter + " "; // добавили стоимость всех покупок в корзине
+//     totalBuy.innerHTML += "&#36;";
+//     totalBuy.style.color = "blue";
+//     // console.log(totalBuy); // для проверки
 
-        n = this.id.split('_')[1]; // добавить проверки, на наличие на складе
-        //console.log(n); // для проверки
+//     return renderCartPosition(cart[indexGood], cart[indexGood]);
 
-        if (cart[n - 1] == null) { // маасив покупок
-            //renderCartList(n - 1); // добавляем покупку в массив покупок
-            $cart.insertAdjacentHTML('beforeend', renderCartList(n - 1));
-            //console.log(cartPos[n - 1]); // для проверки
-
-        } else {
-            alert("Данный товар в единственном экземпляре. Вы уже добавили этот товар в корзину!");
-        }
-
-        showBuy(); // сразу открывается корзина по клику на кнопку Купить
-
-    };
-
-}
-
-// console.log(cart); // для проверки
-//-----------------------------------------------------------------
+// }
+// //--------------------------------------------------------------
 
 
 
 
+// for (var item of $cardsList) {
+
+//     item.querySelector('.add-cart').onclick = function () {
+//         // console.log(this); // для проверки
+//         this.style.color = "brown"; //если товар добавили в корзину хоть один раз, то меняет цвет
+
+//         n = this.id.split('_')[1]; // добавить проверки, на наличие на складе
+//         //console.log(n); // для проверки
+
+//         if (cart[n - 1] == null) { // маасив покупок
+//             //renderCartList(n - 1); // добавляем покупку в массив покупок
+//             $cart.insertAdjacentHTML('beforeend', renderCartList(n - 1));
+//             //console.log(cartPos[n - 1]); // для проверки
+
+//         } else {
+//             alert("Данный товар в единственном экземпляре. Вы уже добавили этот товар в корзину!");
+//         }
+
+//         showBuy(); // сразу открывается корзина по клику на кнопку Купить
+
+//     };
+
+// }
+
+// // console.log(cart); // для проверки
+// //-----------------------------------------------------------------
 
 
-// черновики
+
+
+
+
+// // черновики
 
 
 
