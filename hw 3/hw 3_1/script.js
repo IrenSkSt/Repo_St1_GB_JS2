@@ -58,7 +58,7 @@ class GoodsItem { // карточка товара
     // метод отрисовывает карточку
     render(i) {
 
-        return `<figure id="card_${i}" class="card"><h3>${this.title}</h3><p>Цена: ${this.price}</p><button id="btn_${i++}" class="add-cart">Купить</button></figure>`;
+        return `<figure id="card_${i}" class="card"><h3>${this.title}</h3><p>Цена: ${this.price} руб.</p><button id="btn_${i++}" class="add-cart">Купить</button></figure>`;
     }
 }
 
@@ -82,7 +82,7 @@ class GoodsList { // массив = каталог из карточек тов�
 
                 this.render(); // формирование карточек товаров
                 this.checkSum(); // расчет стоимости товара на складе
-                this.onclickBuy();
+                this.onclickForBuy();
 
             },
             `${API_URL}catalogData.json`
@@ -117,10 +117,10 @@ class GoodsList { // массив = каталог из карточек тов�
         this.goods.forEach(good => {
             goodsSumCounter += good.price;
         });
-        console.log(`Общая стоимость товара на складе = ${goodsSumCounter} долл.США`);
+        console.log(`Общая стоимость товара на складе = ${goodsSumCounter} руб.`);
     }
 
-    onclickBuy() {
+    onclickForBuy() {
         const $cardsList = document.getElementsByClassName("card"); // коллекция карточек товаров
         // console.log($cardsList); // для проверки
 
@@ -205,7 +205,7 @@ class BuysItem { // позиция по товару в корзине
     // метод отрисовывает позицию товара в корзине
     render() {
 
-        return `<figure ><h3>${this.title}</h3> <p>1 шт. * ${this.price} долл.США = ${this.price} долл.США</p > </figure > `; // добавить потом кнопку удаления товара из корзины <button class="cart_delete">Удалить</button> + id="pos_${indexGood}"
+        return `<figure ><h3>${this.title}</h3> <p>1 шт. * ${this.price} руб. = ${this.price} руб.</p > </figure > `; // добавить потом кнопку удаления товара из корзины <button class="cart_delete">Удалить</button> + id="pos_${indexGood}"
     }
 }
 
@@ -244,7 +244,7 @@ class CartList { // массив = список купленных товаро�
         // console.log("Общая стоимость покупок в корзине = " + buysSumCounter + " долл.США"); // для проверки
         let totalBuy = document.querySelector('p');
         totalBuy.innerText = `Общая стоимость Ваших покупок составляет = ${buysSumCounter} `; // добавили стоимость всех покупок в корзине
-        totalBuy.innerHTML += "&#36;";
+        totalBuy.innerHTML += "&#8381;";
         totalBuy.style.color = "blue";
         // console.log(totalBuy); // для проверки
     }
