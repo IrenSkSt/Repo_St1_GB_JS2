@@ -29,7 +29,7 @@ header, footer {
     border: 1px solid gray;
     display: none;
 }
-.cart > figure {
+.cart-list > figure {
     padding: 10px;
     margin: 10px 0;
 }
