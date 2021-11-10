@@ -53,9 +53,11 @@ function send(onError, onSuccess, url, method = 'GET', headers = [], data = null
 
 // Блок формирования Каталога товаров
 class GoodsItem { // карточка товара
-    constructor(title, price) {
-        this.title = title;
-        this.price = price;
+    constructor(title, price, article) {
+        this.title = title; // наименование товара
+        this.price = price; // цена
+        this.art = article; // артикль
+
     }
 
     // метод отрисовывает карточку
@@ -78,7 +80,7 @@ class GoodsList { // массив = каталог из карточек тов�
 
             .then((request) => {
                 // действия для обработки
-                this.goods = request.map(good => ({ title: good.product_name, price: good.price })); // формируем массив из полученных данных
+                this.goods = request.map(good => ({ title: good.product_name, price: good.price, article: good.id_product })); // формируем массив из полученных данных
                 //console.log(this.goods); // для проверки
                 this.goods.forEach(item => { GoodsCards.push(item) });
                 // GoodsCards.push(this.goods);
@@ -89,7 +91,6 @@ class GoodsList { // массив = каталог из карточек тов�
                 this.checkSum(); // расчет стоимости товара на складе
                 this.onclickForBuy(); //активация кнопки Купить
             })
-
             .catch((err) => {
                 // действия при ошибке
                 console.log(err.text);
@@ -125,6 +126,36 @@ class GoodsList { // массив = каталог из карточек тов�
         const $cardsList = document.getElementsByClassName("card"); // коллекция карточек товаров
         // console.log($cardsList); // для проверки
 
+        // $cardsList.forEach((card) => {
+        //     console.log(card); // для проверки
+        //     console.log(card.querySelector('.add-cart')); // для проверки
+        //     card.querySelector('.add-cart').onclick = function () {
+        //         console.log(this); // для проверки
+        //         this.style.color = "brown"; //если товар добавили в корзину хоть один раз, то меняет цвет
+
+        //         let n = this.id.split('_')[1]; // добавить проверки, на наличие на складе
+        //         // console.log(n); // для проверки
+
+        //         if (Buys[n - 1] == null) { // маасив текущих покупок
+        //             // запуск по кнопке Купить
+        //             const cart = new CartList();
+        //             cart.addBuy(n - 1);
+        //             cart.render();
+        //             cart.checkSum();
+
+
+        //             // console.log(Buys); // для проверки
+        //             // console.log(cart.buys); // для проверки
+        //             // console.log(cart.buys[n - 1]); // для проверки
+
+        //         } else {
+        //             alert("Данный товар в единственном экземпляре. Вы уже добавили этот товар в корзину!");
+        //         }
+
+        //         showBuy(); // сразу открывается корзина по клику на кнопку Купить
+        //     }
+        // });
+
         for (var card of $cardsList) {
             // console.log(card.querySelector('.add-cart')); // для проверки
             card.querySelector('.add-cart').onclick = function () {
@@ -137,9 +168,11 @@ class GoodsList { // массив = каталог из карточек тов�
                 if (Buys[n - 1] == null) { // маасив текущих покупок
                     // запуск по кнопке Купить
                     const cart = new CartList();
+                    console.log(cart); // для проверки
                     cart.addBuy(n - 1);
                     cart.render();
                     cart.checkSum();
+                    cart.addCart(); // отправка корзины на сервер
 
 
                     // console.log(Buys); // для проверки
@@ -158,16 +191,8 @@ class GoodsList { // массив = каталог из карточек тов�
     }
 }
 
-// запуск формирования каталога на странице
-const catalog = new GoodsList();
-catalog.fetchGoods();
-// catalog.render();
-// catalog.checkSum();
 
-// console.log(catalog); // для проверки
-// console.log(catalog.goods); // для проверки
-// console.log(GoodsCards); // для проверки
-//----------------------------------------
+
 
 // переделать в Контроллер
 // Перейти в корзину или Показать корзину по нажатия кнопки "Корзина" - повторное нажатие =скрыть
@@ -196,11 +221,13 @@ function showBuy() { // запускается по клику на кнопку
 
 
 //Блок формирования КОрзины по кнопке Купить
-let Buys = []; // массив покупок
+const Buys = []; // массив покупок
+
 class BuysItem { // позиция по товару в корзине
-    constructor(title, price) {
+    constructor(title, price, article) {
         this.title = title;
         this.price = price;
+        this.article = article;
     }
 
     // метод отрисовывает позицию товара в корзине
@@ -224,7 +251,7 @@ class CartList { // массив = список купленных товаро�
 
             .then((request) => {
                 // действия для обработки
-                this.buys = request.map(buy => ({ title: buy.product_name, price: buy.price })); // формируем массив из полученных данных
+                this.buys = request.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product })); // формируем массив из полученных данных
                 //console.log(this.goods); // для проверки
                 this.buys.forEach(item => { Buys.push(item) });
                 // GoodsCards.push(this.goods);
@@ -250,6 +277,15 @@ class CartList { // массив = список купленных товаро�
         // Buys = this.buys;
         console.log(this.buys[indexGood].title); // для проверки
 
+    }
+
+    addCart() { // метод, в котором отправляем данные на сервер о содержимом корзины
+
+        fetch(`${API_URL}addToBasket.json`)
+            .then(() => {
+                console.log(this.buys)
+
+            })
     }
 
     render() { // метод отображает список покупок
@@ -280,7 +316,24 @@ class CartList { // массив = список купленных товаро�
 
 
 
+// запуск формирования каталога на странице
+const catalog = new GoodsList();
+catalog.fetchGoods();
+// catalog.render();
+// catalog.checkSum();
 
+// console.log(catalog); // для проверки
+// console.log(catalog.goods); // для проверки
+// console.log(GoodsCards); // для проверки
+//----------------------------------------
+
+// запуск формирования Корзины с прошлых посещений на странице
+const cart = new CartList();
+cart.fetchCart();
+console.log(cart); // для проверки
+// console.log(cart.buys); // для проверки
+// console.log(Buys); // для проверки
+//----------------------------------------
 
 
 
