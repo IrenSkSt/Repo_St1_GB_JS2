@@ -167,8 +167,8 @@ class GoodsList { // массив = каталог из карточек тов�
 
                 if (Buys[n - 1] == null) { // маасив текущих покупок
                     // запуск по кнопке Купить
-                    const cart = new CartList();
-                    console.log(cart); // для проверки
+                    // const cart = new CartList();
+                    // console.log(cart); // для проверки
                     cart.addBuy(n - 1);
                     cart.render();
                     cart.checkSum();
@@ -251,7 +251,7 @@ class CartList { // массив = список купленных товаро�
 
             .then((request) => {
                 // действия для обработки
-                this.buys = request.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product })); // формируем массив из полученных данных
+                this.buys = request.contents.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product })); // формируем массив из полученных данных
                 //console.log(this.goods); // для проверки
                 this.buys.forEach(item => { Buys.push(item) });
                 // GoodsCards.push(this.goods);
@@ -330,9 +330,10 @@ catalog.fetchGoods();
 // запуск формирования Корзины с прошлых посещений на странице
 const cart = new CartList();
 cart.fetchCart();
-console.log(cart); // для проверки
-// console.log(cart.buys); // для проверки
+// console.log(cart); // для проверки
 // console.log(Buys); // для проверки
+// console.log(cart.buys); // для проверки
+
 //----------------------------------------
 
 
