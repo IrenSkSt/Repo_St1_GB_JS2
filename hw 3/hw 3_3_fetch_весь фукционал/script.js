@@ -156,7 +156,7 @@ class GoodsList { // массив = каталог из карточек тов�
         //     }
         // });
 
-        for (var card of $cardsList) {
+        for (let card of $cardsList) {
             // console.log(card.querySelector('.add-cart')); // для проверки
             card.querySelector('.add-cart').onclick = function () {
                 // console.log(this); // для проверки
@@ -170,7 +170,7 @@ class GoodsList { // массив = каталог из карточек тов�
                     // const cart = new CartList();
                     // console.log(cart); // для проверки
                     cart.addBuy(n - 1);
-                    cart.render();
+                    cart.render(n - 1);
                     cart.checkSum();
                     cart.addCart(); // отправка корзины на сервер
 
@@ -222,6 +222,7 @@ function showBuy() { // запускается по клику на кнопку
 
 //Блок формирования КОрзины по кнопке Купить
 const Buys = []; // массив покупок
+let j = 0; // счетчик позиций в корзине
 
 class BuysItem { // позиция по товару в корзине
     constructor(title, price, article) {
@@ -233,7 +234,7 @@ class BuysItem { // позиция по товару в корзине
     // метод отрисовывает позицию товара в корзине
     render() {
 
-        return `<figure ><h3>${this.title}</h3> <p>1 шт. * ${this.price} руб. = ${this.price} руб.</p > </figure > `; // добавить потом кнопку удаления товара из корзины <button class="cart_delete">Удалить</button> + id="pos_${indexGood}"
+        return `<figure id="pos_${j}" class="cart-item"><h3>${this.title}</h3> <p>1 шт. * ${this.price} руб. = ${this.price} руб.</p > <button id="btn_${j}" class="cart_delete">Удалить</button> </figure > <hr> `; // нумерация по позиции, чтобы несколько единиц по нажатию снова на карточку товара
     }
 }
 
@@ -252,15 +253,15 @@ class CartList { // массив = список купленных товаро�
             .then((request) => {
                 // действия для обработки
                 this.buys = request.contents.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product })); // формируем массив из полученных данных
-                //console.log(this.goods); // для проверки
+                //console.log(this.buys); // для проверки
                 this.buys.forEach(item => { Buys.push(item) });
-                // GoodsCards.push(this.goods);
-                // console.log(GoodsCards); // для проверки
+
+                console.log(Buys); // для проверки
 
 
                 this.render(); // формирование карточек товаров
                 this.checkSum(); // расчет стоимости товара в корзине
-                //this.onclickForDel(); //активация кнопки Удалить
+                this.onclickDelete(); //активация кнопки Удалить
             })
 
             .catch((err) => {
@@ -279,6 +280,13 @@ class CartList { // массив = список купленных товаро�
 
     }
 
+    deleteBuy(indexBuy) {  // удаляем покупку из массива покупок
+        this.buys.splice(indexBuy, 1);
+
+        console.log(this.buys[indexBuy]); // для проверки
+
+    }
+
     addCart() { // метод, в котором отправляем данные на сервер о содержимом корзины
 
         fetch(`${API_URL}addToBasket.json`)
@@ -288,11 +296,23 @@ class CartList { // массив = список купленных товаро�
             })
     }
 
+    deleteCart() { // метод, в котором отправляем данные на сервер об удалении из корзины
+
+        fetch(`${API_URL}deleteFromBasket.json`)
+            .then(() => {
+                console.log(this.buys)
+
+            })
+    }
+
+
+
     render() { // метод отображает список покупок
         let listHtml = '';
         this.buys.forEach(buy => {
-            const buyItem = new BuysItem(buy.title, buy.price);
-            listHtml += buyItem.render();
+            const buyItem = new BuysItem(buy.title, buy.price, buy.article);
+            listHtml += buyItem.render(buy.article);
+            console.log(buy.article); // для проверки
         });
         // document.querySelector('.cart').insertAdjacentHTML('beforeend', listHtml);
         document.querySelector('.cart-list').innerHTML = listHtml;
@@ -309,6 +329,35 @@ class CartList { // массив = список купленных товаро�
         totalBuy.innerHTML += "&#8381;";
         totalBuy.style.color = "blue";
         // console.log(totalBuy); // для проверки
+    }
+
+    onclickDelete() {
+        const $buysList = document.getElementsByClassName("cart-item"); // коллекция карточек товаров
+        // console.log($buysList); // для проверки
+        for (let pos of $buysList) {
+            // console.log(card.querySelector('.add-cart')); // для проверки
+            pos.querySelector('.cart_delete').onclick = function () {
+                // console.log(this); // для проверки
+
+
+                let m = this.id.split('_')[1]; // добавить проверки, на наличие на складе
+                // console.log(n); // для проверки
+
+                cart.deleteBuy(m - 1);
+                cart.render();
+                cart.checkSum();
+                cart.deleteCart(); // удаление из корзины на сервере
+
+
+                // console.log(Buys); // для проверки
+                // console.log(cart.buys); // для проверки
+                // console.log(cart.buys[n - 1]); // для проверки
+
+
+
+            };
+
+        }
     }
 
 }
@@ -330,6 +379,7 @@ catalog.fetchGoods();
 // запуск формирования Корзины с прошлых посещений на странице
 const cart = new CartList();
 cart.fetchCart();
+
 // console.log(cart); // для проверки
 // console.log(Buys); // для проверки
 // console.log(cart.buys); // для проверки

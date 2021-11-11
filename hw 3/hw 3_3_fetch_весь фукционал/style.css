@@ -14,6 +14,14 @@ h3 {
     color: darkblue;
 }
 
+hr {
+    margin-top: 10px;
+}
+
+button {
+    padding: 5px 10px;
+}
+
 header, footer {
     background-color: grey;
     text-align: right;
@@ -32,6 +40,12 @@ header, footer {
 .cart-list > figure {
     padding: 10px;
     margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart_delete:hover {
+background-color: cornflowerblue;
 }
 
 .catalog {
@@ -59,5 +73,7 @@ header, footer {
     
 }
 
+/* .add-cart {
 
+} */
 
