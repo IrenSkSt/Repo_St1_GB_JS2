@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+</head>
+
+<body>
+    <div>
+
+        <p>
+            The Fisherman and the Golden Fish
+            There once lived an old man and his good-wife
+            On the shore of the deep blue ocean;
+            They lived in a tumble-down hovel
+            For thirty-three summers and winters.
+            The old man used to fish for his living,
+            And his wife spun yarn on her distaff.
+            He once cast his net in the ocean,
+            And pulled it up with mud from the bottom;
+            He again cast his net in the ocean,
+            And this time caught nothing but seaweed;
+            When he cast his net for the third time,
+            One fish was all that he landed,
+            No common fish, though, but a goldfish.
+            Now the goldfish began to implore him,
+            And it spoke like a real human being:
+            ‘Put me back, old man, into the ocean —
+            I will pay you a right royal ransom,
+            I wilt give you whatever you ask me.’
+            The old man was astonished and frightened —
+            He’d been fishing for thirty-three summers,
+            Bat had not heard of any fish talking.
+            So with care he untangled the goldfish
+            And tenderly said as he did so:
+            ‘God bless you, my dear little goldfish!
+            Thank you kindly, I don’t want your ransom.
+            Go back to your home in the ocean,
+            And roam where you will without hindrance.’
+            To his wife the old fisherman hastened
+            To tell her about this great marvel.
+            ‘I caught only one fish this morning —
+            A goldfish it was, most uncommon;
+            It spoke like a Christian, and begged me
+            To put it back into the ocean,
+            And promised to pay a rich ransom,
+            To give me whatever I asked for.
+            But how could I ask for a ransom?
+            I released it without any payment.’
+            His wife started scolding her husband:
+            ‘Oh you simpleton! Oh yon great silly!
+            Couldn’t make a mere fish pay a ransom!
+            You at least might have asked for a wash-tub —
+            For ours is all falling to pieces!’
+            The old man returned to the seashore,
+            Where the blue waves were frolicking lightly.
+            He called out aloud for the goldfish,
+            And the goldfish swam up and demanded:
+            ‘What is it, old man, you are wanting?’
+
+
+        </p>
+
+    </div>
+
+    <script>
+
+        // Задание 1 - заменили все одинарные кавычки в тексте на двойные
+
+        let str = document.querySelector('p').innerText;
+        // console.log(str); // для проверки
+
+        // для проверки
+        // let regexp = /Golden Fish/;
+        // let isTrue = regexp.test(str);  // Вернёт true
+        // console.log(isTrue); // для проверки
+
+        let regexp1 = /‘|’/g;
+        // let isTrue1 = regexp1.test(str);  // Вернёт true
+        // console.log(isTrue1); // для проверки
+        // let arrForChange = str.match(regexp1); // 13 шт
+        // console.log(str.match(regexp1)); // для проверки
+        let newTekst = str.replace(regexp1, '"');
+
+        // console.log(newTekst); // для проверки
+        let newElement = document.createElement('p');
+        newElement.innerText = "Новый текст:" + newTekst + "";
+        newElement.style.color = "blue";
+
+        // console.log(newElement); // для проверки
+
+        document.querySelector('div').append(newElement);
+
+    </script>
+
+</body>
+
+</html>
