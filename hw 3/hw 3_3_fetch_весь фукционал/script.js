@@ -289,8 +289,8 @@ class CartList { // массив = список купленных товаро�
 
         this.buys.splice(indexBuy, 1);
         Buys.splice(indexBuy, 1);
-        // console.log(this.buys); // для проверки
-        // console.log(Buys); // для проверки
+        console.log(this.buys); // для проверки
+        console.log(Buys); // для проверки
     }
 
     addCart() { // метод, в котором отправляем данные на сервер о содержимом корзины
@@ -316,8 +316,8 @@ class CartList { // массив = список купленных товаро�
     render() { // метод отображает список покупок
         let listHtml = '';
         this.buys.forEach(buy => {
-            const buyItem = new BuysItem(buy.title, buy.price, buy.article);
-            listHtml += buyItem.render(buy.article);
+            const buyItem = new BuysItem(buy.title, buy.price, buy.article, buy.id);
+            listHtml += buyItem.render();
             // console.log(buy.article); // для проверки
         });
         // document.querySelector('.cart').insertAdjacentHTML('beforeend', listHtml);
@@ -337,6 +337,13 @@ class CartList { // массив = список купленных товаро�
         // console.log(totalBuy); // для проверки
     }
 
+    clear() {
+        document.querySelector('.cart-list').innerHTML = "";
+        let clearCart = document.querySelector('p');
+        clearCart.innerText = "В корзине пока нет покупок. Выберете товар в каталоге";
+        clearCart.style.color = "black";
+    }
+
     onclickDelete() {
         const $buysList = document.getElementsByClassName("cart-item"); // коллекция карточек товаров
         // console.log($buysList); // для проверки
@@ -347,13 +354,18 @@ class CartList { // массив = список купленных товаро�
 
 
                 let m = this.id.split('_')[1]; // добавить проверки, на наличие на складе
-                // console.log(n); // для проверки
+                console.log(m); // для проверки
 
                 cart.deleteBuy(m - 1);
-                cart.render();
-                cart.checkSum();
+
                 cart.deleteCart(); // удаление из корзины на сервере
 
+                if (cart.buys.length >= 1) {
+                    cart.render();
+                    cart.checkSum();
+                } else {
+                    cart.clear(); // очистка корзины
+                }
 
                 // console.log(Buys); // для проверки
                 // console.log(cart.buys); // для проверки
