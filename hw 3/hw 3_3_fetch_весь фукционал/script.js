@@ -322,6 +322,7 @@ class CartList { // массив = список купленных товаро�
         });
         // document.querySelector('.cart').insertAdjacentHTML('beforeend', listHtml);
         document.querySelector('.cart-list').innerHTML = listHtml;
+        this.onclickDelete(); //активация кнопки Удалить
     }
 
     checkSum() { // рассчет общей стоимости покупок в корзине и отражение ее в корзине
@@ -345,7 +346,7 @@ class CartList { // массив = список купленных товаро�
     }
 
     onclickDelete() {
-        const $buysList = document.getElementsByClassName("cart-item"); // коллекция карточек товаров
+        let $buysList = document.getElementsByClassName("cart-item"); // коллекция карточек товаров
         // console.log($buysList); // для проверки
         for (let pos of $buysList) {
             // console.log(card.querySelector('.add-cart')); // для проверки
