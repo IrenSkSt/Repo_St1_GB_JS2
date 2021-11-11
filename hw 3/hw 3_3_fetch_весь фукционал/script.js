@@ -3,7 +3,7 @@
 // получаем с сервера список товаров
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/';
 const GoodsCards = [];
-
+let i = 0;
 // Универсальная функция отправки/получения данных с сервером
 function send(onError, onSuccess, url, method = 'GET', headers = [], data = null, timeout = 30000) {
 
@@ -53,23 +53,26 @@ function send(onError, onSuccess, url, method = 'GET', headers = [], data = null
 
 // Блок формирования Каталога товаров
 class GoodsItem { // карточка товара
-    constructor(title, price, article) {
+    constructor(title, price, article, id) {
         this.title = title; // наименование товара
         this.price = price; // цена
-        this.art = article; // артикль
+        this.article = article; // артикль
+        this.id = id; // номер карточки по порядку
 
     }
 
     // метод отрисовывает карточку
-    render(i) {
-
-        return `<figure id="card_${i}" class="card"><h3>${this.title}</h3><p>Цена: ${this.price} руб.</p><button id="btn_${i++}" class="add-cart">Купить</button></figure>`;
+    render() {
+        // console.log(this); // для проверки
+        // console.log(this.id, this.title); // для проверки
+        return `<figure id="card_${this.id}" class="card"><h3>${this.title}</h3><p>Цена: ${this.price} руб.</p><button id="btn_${this.id}" class="add-cart">Купить</button></figure>`;
     }
 }
 
 class GoodsList { // массив = каталог из карточек товаров
     constructor() {
         this.goods = [];
+
     }
 
     fetchGoods() { // метод, в котором будем получать данные с сервера о товарах на складе
@@ -80,8 +83,8 @@ class GoodsList { // массив = каталог из карточек тов�
 
             .then((request) => {
                 // действия для обработки
-                this.goods = request.map(good => ({ title: good.product_name, price: good.price, article: good.id_product })); // формируем массив из полученных данных
-                //console.log(this.goods); // для проверки
+                this.goods = request.map(good => ({ title: good.product_name, price: good.price, article: good.id_product, id: ++i })); // формируем массив из полученных данных
+                // console.log(this.goods); // для проверки
                 this.goods.forEach(item => { GoodsCards.push(item) });
                 // GoodsCards.push(this.goods);
                 // console.log(GoodsCards); // для проверки
@@ -104,10 +107,11 @@ class GoodsList { // массив = каталог из карточек тов�
     render() { // метод отображает список товаров = католог карточек товаров
 
         let listHtml = '';
-        let i = 1;
+
         this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.title, good.price);
-            listHtml += goodItem.render(i++);
+            const goodItem = new GoodsItem(good.title, good.price, good.article, good.id);
+            // console.log(good.id); // для проверки
+            listHtml += goodItem.render();
 
         });
         document.querySelector('.box_cards').innerHTML = listHtml;
@@ -165,7 +169,7 @@ class GoodsList { // массив = каталог из карточек тов�
                 let n = this.id.split('_')[1]; // добавить проверки, на наличие на складе
                 // console.log(n); // для проверки
 
-                if (Buys[n - 1] == null) { // маасив текущих покупок
+                if (Buys[n - 1] == null) { // массив текущих покупок
                     // запуск по кнопке Купить
                     // const cart = new CartList();
                     // console.log(cart); // для проверки
@@ -225,16 +229,17 @@ const Buys = []; // массив покупок
 let j = 0; // счетчик позиций в корзине
 
 class BuysItem { // позиция по товару в корзине
-    constructor(title, price, article) {
+    constructor(title, price, article, id) {
         this.title = title;
         this.price = price;
         this.article = article;
+        this.id = id;
     }
 
     // метод отрисовывает позицию товара в корзине
     render() {
 
-        return `<figure id="pos_${j}" class="cart-item"><h3>${this.title}</h3> <p>1 шт. * ${this.price} руб. = ${this.price} руб.</p > <button id="btn_${j}" class="cart_delete">Удалить</button> </figure > <hr> `; // нумерация по позиции, чтобы несколько единиц по нажатию снова на карточку товара
+        return `<figure id="pos_${this.id}" class="cart-item"><h3>${this.title}</h3> <p>1 шт. * ${this.price} руб. = ${this.price} руб.</p > <button id="btn_${this.id}" class="cart_delete">Удалить</button> </figure > <hr> `; // нумерация по позиции, чтобы несколько единиц по нажатию снова на карточку товара
     }
 }
 
@@ -252,11 +257,11 @@ class CartList { // массив = список купленных товаро�
 
             .then((request) => {
                 // действия для обработки
-                this.buys = request.contents.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product })); // формируем массив из полученных данных
-                //console.log(this.buys); // для проверки
+                this.buys = request.contents.map(buy => ({ title: buy.product_name, price: buy.price, article: buy.id_product, id: GoodsCards[GoodsCards.findIndex((card) => card.article == buy.id_product)].id })); // формируем массив из полученных данных
+                // console.log(this.buys); // для проверки
                 this.buys.forEach(item => { Buys.push(item) });
 
-                console.log(Buys); // для проверки
+                // console.log(Buys); // для проверки
 
 
                 this.render(); // формирование карточек товаров
@@ -276,15 +281,16 @@ class CartList { // массив = список купленных товаро�
     addBuy(indexGood) {  // добавляем покупку в массив покупок
         this.buys[indexGood] = GoodsCards[indexGood];
         // Buys = this.buys;
-        console.log(this.buys[indexGood].title); // для проверки
+        // console.log(this.buys[indexGood].title); // для проверки
 
     }
 
     deleteBuy(indexBuy) {  // удаляем покупку из массива покупок
+
         this.buys.splice(indexBuy, 1);
-
-        console.log(this.buys[indexBuy]); // для проверки
-
+        Buys.splice(indexBuy, 1);
+        // console.log(this.buys); // для проверки
+        // console.log(Buys); // для проверки
     }
 
     addCart() { // метод, в котором отправляем данные на сервер о содержимом корзины
@@ -312,7 +318,7 @@ class CartList { // массив = список купленных товаро�
         this.buys.forEach(buy => {
             const buyItem = new BuysItem(buy.title, buy.price, buy.article);
             listHtml += buyItem.render(buy.article);
-            console.log(buy.article); // для проверки
+            // console.log(buy.article); // для проверки
         });
         // document.querySelector('.cart').insertAdjacentHTML('beforeend', listHtml);
         document.querySelector('.cart-list').innerHTML = listHtml;
@@ -379,6 +385,7 @@ catalog.fetchGoods();
 // запуск формирования Корзины с прошлых посещений на странице
 const cart = new CartList();
 cart.fetchCart();
+cart.onclickDelete();
 
 // console.log(cart); // для проверки
 // console.log(Buys); // для проверки
