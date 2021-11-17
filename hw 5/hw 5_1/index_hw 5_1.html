@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+
+    <!-- Подключили стили -->
+    <link rel="stylesheet" href="style.css">
+
+
+
+</head>
+
+<body>
+    <!-- ДЗ 5 -->
+    <!-- контейнер, к которому будет подключен вью фреймворк -->
+    <div id="app">
+        <header>
+            <div class="content">
+                <form class="search">
+                    <input type="text" class="goods-search" v-model="searchLine">
+                    <button class="search-button" type="button" v-on:click="filter">Искать</button>
+                </form>
+                <button class="cart-button" type="button">Корзина</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="content">
+                <div class="cart">
+                    <h2>Ваша корзина</h2>
+                    <p>В корзине пока нет покупок. Выберете товар в каталоге</p>
+                    <hr>
+                    <div class="cart-list"></div>
+                </div>
+                <section class="catalog">
+
+                    <!-- по умолчанию отражается каталог и если строка пустая -->
+                    <template v-if="isNotFiltered">
+                        <h1>Каталог товаров</h1>
+                        <div class="box_cards">
+
+                            <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
+                            <figure class="good-card" v-for="good of filterGoods" v-bind:key="good.id_product">
+                                <h3>{{good.product_name}}</h3>
+                                <p>{{good.price}} руб.</p>
+                                <button class="add-cart">Купить</button>
+                            </figure>
+                    </template>
+
+
+                    <!-- а иначе отражается список товаров из каталога по поиску -->
+                    <template v-else>
+                        <h1>Товары, найденные по Вашему запросу</h1>
+                        <div class="box_cards">
+
+                            <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
+                            <figure class="good-card" v-for="good of filterGoods" v-bind:key="good.id_product">
+                                <h3>{{good.product_name}}</h3>
+                                <p>{{good.price}} руб.</p>
+                                <button class="add-cart">Купить</button>
+                            </figure>
+                    </template>
+
+            </div>
+
+            </section>
+    </div>
+    </main>
+
+
+    <footer>
+        <div class="content">
+            <h6>Все правва защищены</h6>
+        </div>
+    </footer>
+    </div>
+
+
+    <!-- подключили вью фреймворк -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- подключили свой скрипт -->
+    <script src="main.js"></script>
+
+
+
+</body>
+
+</html>
