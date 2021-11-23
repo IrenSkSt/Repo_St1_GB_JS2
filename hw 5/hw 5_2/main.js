@@ -27,6 +27,33 @@ new Vue({
                 })
         },
 
+        loadCart() { // загрузка корзины с сервера
+            fetch(`${API_URL}getBasket.json`)
+                .then((request) => request.json())
+                .then((data) => {
+                    data.contents.forEach(item => { this.cart.push(item) });
+
+                    this.buys = this.cart;
+                    console.log(this.cart); // Для проверки
+                    this.buysSumCounter = data.amount;
+                })
+        },
+        addToCart(buy) { //отправка на сервер новой покупки
+            fetch(`${API_URL}addToBasket.json`)
+                .then(() => {
+                    console.log(this.buy)
+
+                })
+        },
+        deleteCart() { //отправка на сервер удаленной покупки
+            fetch(`${API_URL}deleteFromBasket.json`)
+                .then(() => {
+                    console.log(this.buy)
+
+                })
+        },
+
+
         filter() { // фильтер товаров по запросу в поисковой строке
             if (this.searchLine.length === 0) {
                 this.isNotFiltered = true;
@@ -52,10 +79,15 @@ new Vue({
         },
 
         deleteBuy(buy) {
-            this.buys.splice(buy, 1);
-            this.cart.splice(buy, 1);
-            // console.log(this.buys); // для проверки
-            // console.log(this.cart); // для проверки
+            console.log(buy); // для проверки
+
+            const index = this.cart.findIndex((item) => item.id_product == buy.id_product);
+            this.buys.splice(index, 1);
+            this.cart.splice(index, 1);
+            console.log(index); // для проверки
+            console.log(this.buys); // для проверки
+            console.log(this.cart); // для проверки
+            this.deleteCart(buy);
         },
 
         addBuy(buy) { // добавить покупку в Корзину
@@ -80,8 +112,8 @@ new Vue({
                 this.buys.push(buy);
                 this.cart.push(buy);
                 this.buysSumCounter += buy.price;
-
                 this.showBuy();
+                this.addToCart(buy);
             }
 
 
@@ -113,7 +145,10 @@ new Vue({
 
     mounted() {
         this.loadGoods(); // запуск функции загрузки Списка товаров
-        // console.log(this.cart); // Для проверки
+
+        this.loadCart(); // запуск загрузки Корзины
+
+        //console.log(); // для проверки
     }
 })
 
