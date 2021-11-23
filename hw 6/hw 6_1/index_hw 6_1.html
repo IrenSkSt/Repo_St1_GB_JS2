@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+
+    <!-- Подключили стили -->
+    <link rel="stylesheet" href="style.css">
+
+
+
+</head>
+
+<body>
+    <!-- ДЗ 5 -->
+    <!-- контейнер, к которому будет подключен вью фреймворк -->
+    <div id="app">
+        <header>
+            <div class="content">
+                <form class="search">
+                    <input type="text" class="goods-search" v-model="searchLine">
+                    <button class="search-button" type="button" v-on:click="filter">Искать</button>
+                </form>
+                <button class="cart-button" type="button" v-on:click="showCart">Корзина</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="content">
+
+                <!-- по умолчанию Корзина скрыта -->
+                <template v-if="isOpenCart">
+                    <div class="cart">
+                        <button class="btn-close" v-on:click="showCart">x</button>
+                        <h2>Ваша корзина</h2>
+                        <p style="color: blue;">{{sumBuys}}</p>
+                        <hr>
+                        <div class="cart-list">
+
+                            <!-- Позиция по товару в корзине -->
+                            <figure class="cart-item" v-for="item of cart" v-bind:key="item.id_product">
+                                <h3 style="color: darkblue;">{{item.product_name}}</h3>
+                                <p>1 шт. х {{item.price}} руб. = {{item.price}} руб.</p>
+                                <button class="cart-delete" v-on:click="deleteBuy(item)">Удалить</button>
+                            </figure>
+
+                        </div>
+                    </div>
+                </template>
+                <!-- по умолчанию Корзина скрыта от просмотра-->
+                <template v-else></template>
+
+                <section class="catalog">
+
+                    <!-- по умолчанию отражается каталог и если строка пустая -->
+                    <template v-if="isNotFiltered">
+                        <h1>Каталог товаров</h1>
+                    </template>
+                    <!-- а иначе отражается список товаров из каталога по поиску -->
+                    <template v-else>
+                        <h1 style="color: darkred;">{{sumCards}}</h1>
+                    </template>
+
+                    <div class="box_cards">
+
+                        <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
+                        <figure class="good-card" v-for="good of filterGoods" v-bind:key="good.id_product">
+                            <h3>{{good.product_name}}</h3>
+                            <p>{{good.price}} руб.</p>
+                            <button class="add-cart" v-on:click="addBuy(good)">Купить</button>
+                        </figure>
+
+
+                    </div>
+
+                </section>
+            </div>
+        </main>
+
+
+        <footer>
+            <div class="content">
+                <h6>Все правва защищены</h6>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- подключили вью фреймворк -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- подключили свой скрипт -->
+    <script src="main.js"></script>
+
+
+
+</body>
+
+</html>
