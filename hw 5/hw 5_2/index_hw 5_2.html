@@ -38,6 +38,7 @@
                 <!-- по умолчанию Корзина скрыта -->
                 <template v-if="isOpenCart">
                     <div class="cart">
+                        <button class="btn-close" v-on:click="showCart">x</button>
                         <h2>Ваша корзина</h2>
                         <p style="color: blue;">{{sumBuys}}</p>
                         <hr>
@@ -47,7 +48,7 @@
                             <figure class="cart-item" v-for="buy of cart" v-bind:key="buy.id_product">
                                 <h3 style="color: darkblue;">{{buy.product_name}}</h3>
                                 <p>1 шт. х {{buy.price}} руб. = {{buy.price}} руб.</p>
-                                <button class="cart-delete" v-on:click="deleteBuy">Купить</button>
+                                <button class="cart-delete" v-on:click="deleteBuy(buy)">Удалить</button>
                             </figure>
 
                         </div>
@@ -73,7 +74,7 @@
                         <figure class="good-card" v-for="good of filterGoods" v-bind:key="good.id_product">
                             <h3>{{good.product_name}}</h3>
                             <p>{{good.price}} руб.</p>
-                            <button class="add-cart" v-on:click="addBuy">Купить</button>
+                            <button class="add-cart" v-on:click="addBuy(good)">Купить</button>
                         </figure>
 
 

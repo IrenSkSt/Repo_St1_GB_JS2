@@ -12,6 +12,7 @@ new Vue({
         searchLine: '', // пустая строка поиска
         isNotFiltered: true, // покупатель не фильтрует поиском список товаров
         isOpenCart: false, // корзина не открыта для просмотра
+        isAddToCart: true,
         cartEmpty: 'В корзине пока нет покупок. Выберете товар в каталоге', // корзина пуста
         cardsSum: 0,
         buysSumCounter: 0
@@ -43,21 +44,47 @@ new Vue({
         showCart() { // показать Корзину по нажатию кнопки "Корзина" или при добавлении туда товара
             this.isOpenCart = !this.isOpenCart;
         },
+        showBuy() {
+            if (!this.isOpenCart) {
 
-        addBuy() { // добавить покупку в Корзину
-            // заглушки пока !!! Не работаеты
-            const buy = this.filterGoods;
+                this.isOpenCart = true;
+            }
+        },
+
+        deleteBuy(buy) {
+            this.buys.splice(buy, 1);
+            this.cart.splice(buy, 1);
+            // console.log(this.buys); // для проверки
+            // console.log(this.cart); // для проверки
+        },
+
+        addBuy(buy) { // добавить покупку в Корзину
+
             // console.log(buy); // Для проверки
-            this.cart.forEach((item) => {
-                if (item.id_product == this.buy.id_product) {
-                    alert('Данный товар уже добавлен в Вашу корзину')
-                } else {
-                    this.buys.push(buy);
-                    this.cart.push(buy);
-                    this.showCart();
-                }
 
-            });
+            // console.log(buy.id_product); // Для проверки
+            // console.log(this.cart); // Для проверки
+
+            if (this.cart.length > 0) {
+
+                this.cart.forEach((item) => {
+                    if (item.id_product == buy.id_product) {
+                        this.isAddToCart = false;
+                        return alert('Данный товар уже добавлен в Вашу корзину');
+                    }
+                });
+            }
+
+            if (this.isAddToCart) {
+                // console.log(buy.id_product); // Для проверки
+                this.buys.push(buy);
+                this.cart.push(buy);
+                this.buysSumCounter += buy.price;
+
+                this.showBuy();
+            }
+
+
 
         }
 

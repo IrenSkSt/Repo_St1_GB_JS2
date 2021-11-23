@@ -37,12 +37,19 @@ header, footer {
     padding: 5px 10px;
     color: blue;
 }
+.btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-color: transparent;
+    background-color: white;
+}
 
 .cart {
     margin-bottom: 50px;
     padding: 20px 10px;
     border: 1px solid gray;
-    
+    position: relative;
 }
 .cart-list > figure {
     padding: 10px;
