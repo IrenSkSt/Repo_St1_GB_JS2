@@ -8,7 +8,7 @@ new Vue({
         goods: [],
         filterGoods: [],
         cart: [],
-        buys: [],
+        // buys: [],
         searchLine: '', // пустая строка поиска
         isNotFiltered: true, // покупатель не фильтрует поиском список товаров
         isOpenCart: false, // корзина не открыта для просмотра
@@ -33,7 +33,7 @@ new Vue({
                 .then((data) => {
                     data.contents.forEach(item => { this.cart.push(item) });
 
-                    this.buys = this.cart;
+                    // this.buys = this.cart;
                     console.log(this.cart); // Для проверки
                     this.buysSumCounter = data.amount;
                 })
@@ -41,14 +41,14 @@ new Vue({
         addToCart(buy) { //отправка на сервер новой покупки
             fetch(`${API_URL}addToBasket.json`)
                 .then(() => {
-                    console.log(this.buy)
+                    console.log(buy)
 
                 })
         },
-        deleteCart() { //отправка на сервер удаленной покупки
+        deleteCart(buy) { //отправка на сервер удаленной покупки
             fetch(`${API_URL}deleteFromBasket.json`)
                 .then(() => {
-                    console.log(this.buy)
+                    console.log(buy)
 
                 })
         },
@@ -82,11 +82,12 @@ new Vue({
             console.log(buy); // для проверки
 
             const index = this.cart.findIndex((item) => item.id_product == buy.id_product);
-            this.buys.splice(index, 1);
             this.cart.splice(index, 1);
+            // this.cart = this.buys;
             console.log(index); // для проверки
-            console.log(this.buys); // для проверки
+            // console.log(this.buys); // для проверки
             console.log(this.cart); // для проверки
+            this.buysSumCounter -= buy.price;
             this.deleteCart(buy);
         },
 
@@ -109,7 +110,7 @@ new Vue({
 
             if (this.isAddToCart) {
                 // console.log(buy.id_product); // Для проверки
-                this.buys.push(buy);
+                // this.buys.push(buy);
                 this.cart.push(buy);
                 this.buysSumCounter += buy.price;
                 this.showBuy();

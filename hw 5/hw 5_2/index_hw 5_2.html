@@ -45,10 +45,10 @@
                         <div class="cart-list">
 
                             <!-- Позиция по товару в корзине -->
-                            <figure class="cart-item" v-for="buy of cart" v-bind:key="buy.id_product">
-                                <h3 style="color: darkblue;">{{buy.product_name}}</h3>
-                                <p>1 шт. х {{buy.price}} руб. = {{buy.price}} руб.</p>
-                                <button class="cart-delete" v-on:click="deleteBuy(buy)">Удалить</button>
+                            <figure class="cart-item" v-for="item of cart" v-bind:key="item.id_product">
+                                <h3 style="color: darkblue;">{{item.product_name}}</h3>
+                                <p>1 шт. х {{item.price}} руб. = {{item.price}} руб.</p>
+                                <button class="cart-delete" v-on:click="deleteBuy(item)">Удалить</button>
                             </figure>
 
                         </div>
