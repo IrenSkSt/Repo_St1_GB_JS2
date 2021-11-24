@@ -27,7 +27,7 @@ Vue.component('card-good', {
     template: `<figure class="good-card">
     <h3>{{title}}</h3>
     <p>{{price}} руб.</p>
-    <button class="add-cart" v-on:click="onClickBuy(good)">Купить</button>
+    <button class="add-cart" v-on:click="onClickBuy">Купить</button>
     </figure>`,
 
     props: {
@@ -38,7 +38,7 @@ Vue.component('card-good', {
     methods: {
         onClickBuy() {
             console.log("onClick"); // Для проверки
-            this.$emit('addToCart', this.good)
+            this.$emit('add-to-cart', this.good)
         }
     }
 })
@@ -66,7 +66,7 @@ Vue.component('cart-item', {
     template: `<figure class="cart-item" >
     <h3 style="color: darkblue;">{{name}}</h3>
     <p>1 шт. х {{price}} руб. = {{price}} руб.</p>
-    <button class="cart-delete" v-on:click="deleteBuy(item)">Удалить</button>
+    <button class="cart-delete" v-on:click="onClickDelete">Удалить</button>
     </figure>`,
 
     props: {
@@ -77,7 +77,7 @@ Vue.component('cart-item', {
     methods: {
         onClickDelete() {
             console.log("onClick"); // Для проверки
-            this.$emit('addToCart', this.item)
+            this.$emit('delete-buy', this.item)
         }
     }
 })
@@ -114,7 +114,7 @@ Vue.component('cart', {
 
         closeCart() {
             console.log("onClick"); // Для проверки
-            this.$emit('clickCloseCart')
+            this.$emit('click-сlose-сart')
         }
     }
 })
