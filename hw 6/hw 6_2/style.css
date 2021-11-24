@@ -1,0 +1,100 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.content {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 20px;
+}
+header > .content {
+    display: flex;
+    justify-content: space-between;
+}
+
+h3 {
+    color: darkblue;
+}
+
+hr {
+    margin-top: 10px;
+}
+
+button, input {
+    padding: 5px 10px;
+}
+
+header, footer {
+    background-color: grey;
+    text-align: right;
+}
+
+
+.cart-button {
+    padding: 5px 10px;
+    color: blue;
+}
+.btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-color: transparent;
+    background-color: white;
+}
+
+.cart {
+    margin-bottom: 50px;
+    padding: 20px 10px;
+    border: 1px solid gray;
+    position: relative;
+}
+.cart-list > figure {
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart_delete:hover {
+background-color: cornflowerblue;
+}
+
+.catalog {
+    text-align: center;
+}
+
+.box_cards {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    
+}
+.box_cards > p {
+    
+    color: darkred;
+    font-size: 22px;
+    
+}
+
+.good-card {
+    width: 150px;
+    height: 250px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #000;
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+/* .add-cart {
+
+} */
+
