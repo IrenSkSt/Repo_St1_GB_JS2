@@ -1,6 +1,61 @@
-// новый код ДЗ 5
-
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/';
+
+// новый код ДЗ 6
+
+// поиск
+Vue.component('search', {
+    template: `<form class="search">
+    <input type="text" class="goods-search" v-model="searchLine">
+    <button class="search-button" type="button" v-on:click="onClickSearch">Искать</button>
+    </form>`,
+    data() {
+        return {
+            searchLine: '' //  пустая строка поиска
+        }
+    },
+    methods: {
+        onClickSearch() {
+            // console.log("onClick"); // Для проверки
+            this.$emit('searching', this.searchLine)
+        }
+    }
+
+})
+
+//карточка товара
+Vue.component('card-good', {
+    template: `<figure class="good-card">
+    <h3>{{title}}</h3>
+    <p>{{price}} руб.</p>
+    <button class="add-cart" v-on:click="onClickBuy">Купить</button>
+    </figure>`,
+    data() {
+        return {
+            good: {}
+        }
+    },
+    props: {
+        title: String,
+        price: Number
+    },
+    methods: {
+        onClickBuy() {
+            // console.log("onClick"); // Для проверки
+            this.$emit('addToCart', this.good)
+        }
+    }
+})
+
+// каталог (список товаров)
+Vue.component('catalog', {
+    template: `<div class="box_cards">
+    <card-good v-for="good of list" v-bind:key="good.id_product" v-bind:title="good.product_name" v-bind:price="good.price"></card-good>
+    </div>`,
+    props: {
+        list: Array
+    }
+})
+
 
 new Vue({
     el: "#app", // селектор контейнера
@@ -9,7 +64,7 @@ new Vue({
         filterGoods: [],
         cart: [],
         // buys: [],
-        searchLine: '', // пустая строка поиска
+        // searchLine: '', // пустая строка поиска
         isNotFiltered: true, // покупатель не фильтрует поиском список товаров
         isOpenCart: false, // корзина не открыта для просмотра
         isAddToCart: true,
@@ -34,7 +89,7 @@ new Vue({
                     data.contents.forEach(item => { this.cart.push(item) });
 
                     // this.buys = this.cart;
-                    console.log(this.cart); // Для проверки
+                    // console.log(this.cart); // Для проверки
                     this.buysSumCounter = data.amount;
                 })
         },
@@ -54,18 +109,20 @@ new Vue({
         },
 
 
-        filter() { // фильтер товаров по запросу в поисковой строке
-            if (this.searchLine.length === 0) {
+        filter(searchLine) { // фильтер товаров по запросу в поисковой строке
+            if (searchLine.length == 0) {
                 this.isNotFiltered = true;
                 this.filterGoods = this.goods;
+                console.log(this.filterGoods); // для проверки
             } else {
-                const searchString = this.searchLine.trim();
+                const searchString = searchLine.trim();
                 const reg = new RegExp(searchString, 'i');
                 this.filterGoods = this.goods.filter((good) => reg.test(good.product_name));
                 this.isNotFiltered = false;
 
 
             }
+
         },
 
         showCart() { // показать Корзину по нажатию кнопки "Корзина" или при добавлении туда товара
@@ -149,7 +206,7 @@ new Vue({
 
         this.loadCart(); // запуск загрузки Корзины
 
-        //console.log(); // для проверки
+
     }
 })
 

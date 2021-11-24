@@ -8,9 +8,6 @@
     <title>Document</title>
 
 
-
-
-
     <!-- Подключили стили -->
     <link rel="stylesheet" href="style.css">
 
@@ -19,15 +16,13 @@
 </head>
 
 <body>
-    <!-- ДЗ 5 -->
+    <!-- ДЗ 6 - новый код с учетом компонентов -->
     <!-- контейнер, к которому будет подключен вью фреймворк -->
     <div id="app">
         <header>
             <div class="content">
-                <form class="search">
-                    <input type="text" class="goods-search" v-model="searchLine">
-                    <button class="search-button" type="button" v-on:click="filter">Искать</button>
-                </form>
+                <search v-on:searching="filter"></search>
+
                 <button class="cart-button" type="button" v-on:click="showCart">Корзина</button>
             </div>
         </header>
@@ -68,17 +63,14 @@
                         <h1 style="color: darkred;">{{sumCards}}</h1>
                     </template>
 
-                    <div class="box_cards">
 
-                        <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
-                        <figure class="good-card" v-for="good of filterGoods" v-bind:key="good.id_product">
-                            <h3>{{good.product_name}}</h3>
-                            <p>{{good.price}} руб.</p>
-                            <button class="add-cart" v-on:click="addBuy(good)">Купить</button>
-                        </figure>
+                    <!-- Каталог товаров -->
+                    <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
+                    <catalog v-bind:list="filterGoods" v-on:addToCart="addToCart">
+                    </catalog>
 
 
-                    </div>
+
 
                 </section>
             </div>
