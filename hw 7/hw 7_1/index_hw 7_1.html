@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <!-- Подключили стили -->
+    <link rel="stylesheet" href="style.css">
+
+
+
+</head>
+
+<body>
+    <!-- ДЗ 6 - новый код с учетом компонентов -->
+    <!-- контейнер, к которому будет подключен вью фреймворк -->
+    <div id="app">
+        <header>
+            <div class="content">
+                <search v-on:searching="filter"></search>
+
+                <button class="cart-button" type="button" v-on:click="showCart">Корзина</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="content">
+
+                <!-- по умолчанию Корзина скрыта -->
+                <template v-if="isOpenCart">
+                    <cart v-bind:list_buys="buys" v-bind:message="cartTotal" v-on:click-сlose-сart="showCart"
+                        v-on:delete-buy="deleteBuy">
+                    </cart>
+                </template>
+                <!-- по умолчанию Корзина скрыта от просмотра-->
+                <template v-else></template>
+
+                <section class="catalog">
+
+                    <!-- по умолчанию отражается каталог и если строка пустая -->
+                    <template v-if="isNotFiltered">
+                        <h1>Каталог товаров</h1>
+                    </template>
+                    <!-- а иначе отражается список товаров из каталога по поиску -->
+                    <template v-else>
+                        <h1 style="color: darkred;">{{sumCards}}</h1>
+                    </template>
+
+
+                    <!-- Каталог товаров -->
+
+                    <!-- по умолчанию отражаетсясообщение об ошибке, если сервер не прислал каталог -->
+                    <template v-if="isError">
+                        <error-server></error-server>
+                    </template>
+
+                    <!-- а иначе отражается каталога товаров из списка, полученного с сервера -->
+                    <template v-else>
+
+                        <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
+                        <catalog v-bind:list="filterGoods" v-on:add-to-cart="addToCart">
+                        </catalog>
+                    </template>
+
+
+
+                </section>
+            </div>
+        </main>
+
+
+        <footer>
+            <div class="content">
+                <h6>Все правва защищены</h6>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- подключили вью фреймворк -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- подключили свой скрипт -->
+    <script src="main.js"></script>
+
+
+
+</body>
+
+</html>
