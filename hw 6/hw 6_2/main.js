@@ -227,16 +227,18 @@ new Vue({
 
             const index = this.buys.findIndex((item) => item.id_product == id_buy);
             console.log(index); // для проверки
-            const deletePositionCart = this.buys.splice(index, 1);
+            const deletePositionCart = this.buys[index];
             this.buysSumCounter -= deletePositionCart.price;
             // this.deleteCart(buy);
             // this.buys.splice(index, 1);
+            this.buys.splice(index, 1);
             this.cart = this.buys;
 
-            // console.log(); // для проверки
+            console.log(deletePositionCart.price); // для проверки
             console.log(this.buys); // для проверки
             console.log(this.cart); // для проверки
             this.deleteCart(deletePositionCart);
+            this.sumBuys();
         },
 
         addBuy(buy) { // добавить покупку в Корзину
