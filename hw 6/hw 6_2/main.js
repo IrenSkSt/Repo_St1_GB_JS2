@@ -66,29 +66,36 @@ Vue.component('cart-item', {
     template: `<figure class="cart-item" >
     <h3 style="color: darkblue;">{{name}}</h3>
     <p>1 шт. х {{price}} руб. = {{price}} руб.</p>
-    <button class="cart-delete" v-on:click="onClickDelete">Удалить</button>
+    <button class="cart-delete"  v-on:click="onClickDelete">Удалить</button>
     </figure>`,
 
     props: {
         name: String,
-        price: Number
+        price: Number,
+
 
     },
     methods: {
-        onClickDelete() {
-            console.log("onClick"); // Для проверки
-            this.$emit('delete-buy', this.item)
+        onClickDelete(e) {
+            // console.log("onClick"); // Для проверки
+            // console.log(e.target); // Для проверки
+            const id_buy = e.target.parentElement.id;
+            // console.log(e.target.parentElement.id); // Для проверки
+            // console.log(id_buy); // Для проверки
+            this.$emit('delete-buy', id_buy);
+            this.$root.deleteBuy(id_buy);
         }
     }
 })
+
 // Корзина (список покупок)
 Vue.component('cart', {
-    template: `<div class="cart">
+    template: `<div class="cart" v-on:delete-buy>
     <button class="btn-close" v-on:click="closeCart">x</button>
     <h2>Ваша корзина</h2>
     <p style="color: blue;">{{message}}</p>
     <hr>
-    <div class="cart-list"><cart-item v-for="item of list_buys" v-bind:key="item.id_product" v-bind:name="item.product_name" v-bind:price="item.price"></cart-item>    
+    <div class="cart-list"><cart-item v-for="item of list_buys" v-bind:key="item.id_product" v-bind:name="item.product_name" v-bind:price="item.price" :id="item.id_product"></cart-item>    
     </div>
 </div>`,
     // data() {
@@ -215,17 +222,21 @@ new Vue({
 
         },
 
-        deleteBuy(buy) {
-            console.log(buy); // для проверки
+        deleteBuy(id_buy) {
+            console.log(id_buy); // для проверки
 
-            const index = this.cart.findIndex((item) => item.id_product == buy.id_product);
-            this.cart.splice(index, 1);
-            // this.cart = this.buys;
+            const index = this.buys.findIndex((item) => item.id_product == id_buy);
             console.log(index); // для проверки
-            // console.log(this.buys); // для проверки
+            const deletePositionCart = this.buys.splice(index, 1);
+            this.buysSumCounter -= deletePositionCart.price;
+            // this.deleteCart(buy);
+            // this.buys.splice(index, 1);
+            this.cart = this.buys;
+
+            // console.log(); // для проверки
+            console.log(this.buys); // для проверки
             console.log(this.cart); // для проверки
-            this.buysSumCounter -= buy.price;
-            this.deleteCart(buy);
+            this.deleteCart(deletePositionCart);
         },
 
         addBuy(buy) { // добавить покупку в Корзину
