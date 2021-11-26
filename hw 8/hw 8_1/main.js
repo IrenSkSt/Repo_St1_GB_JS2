@@ -36,9 +36,14 @@ Vue.component('card-good', {
         good: Object
     },
     methods: {
-        onClickBuy() {
-            console.log("onClick"); // Для проверки
-            this.$emit('add-to-cart', this.good)
+        onClickBuy(e) {
+            // console.log("onClick"); // Для проверки
+            // console.log(e.target); // Для проверки
+            const id_good = e.target.parentElement.id;
+            // console.log(e.target.parentElement.id); // Для проверки
+            // console.log(id_buy); // Для проверки
+            this.$emit('add-to-cart', id_good);
+            this.$root.addBuy(id_good);
         }
     }
 })
@@ -46,7 +51,7 @@ Vue.component('card-good', {
 // каталог (список товаров)
 Vue.component('catalog', {
     template: `<div class="box_cards">
-    <card-good v-for="good of list" v-bind:key="good.id_product" v-bind:title="good.product_name" v-bind:price="good.price" v-bind:good="good"></card-good>
+    <card-good v-for="good of list" v-bind:key="good.id_product" v-bind:title="good.product_name" v-bind:price="good.price" v-bind:good="good" :id="good.id_product"></card-good>
     </div>`,
     props: {
         list: Array
@@ -71,9 +76,7 @@ Vue.component('cart-item', {
 
     props: {
         name: String,
-        price: Number,
-
-
+        price: Number
     },
     methods: {
         onClickDelete(e) {
@@ -90,7 +93,7 @@ Vue.component('cart-item', {
 
 // Корзина (список покупок)
 Vue.component('cart', {
-    template: `<div class="cart" v-on:delete-buy>
+    template: `<div class="cart" v-on:delete-buy v-on:onClickBuy>
     <button class="btn-close" v-on:click="closeCart">x</button>
     <h2>Ваша корзина</h2>
     <p style="color: blue;">{{message}}</p>
@@ -98,26 +101,13 @@ Vue.component('cart', {
     <div class="cart-list"><cart-item v-for="item of list_buys" v-bind:key="item.id_product" v-bind:name="item.product_name" v-bind:price="item.price" :id="item.id_product"></cart-item>    
     </div>
 </div>`,
-    // data() {
-    //     return {
-    //         cartAmount: 'В корзине пока нет покупок. Выберете товар в каталоге' // корзина пуста  
-    //     }
-    // },
+
     props: {
         list_buys: Array,
         // amount: Number,
         message: String
     },
     methods: {
-        // sumBuys(amount) {
-        //     if (listBuys.length !== 0) {
-        //         console.log(this.listBuys); // Для проверки
-        //         //     return 'В корзине пока нет покупок. Выберете товар в каталоге' // корзина пуста;
-        //         // } else {
-        //         cartAmount = `Общая стоимость Ваших покупок составляет = {{amount}} руб.`;
-        //     }
-
-        // },
 
         closeCart() {
             console.log("onClick"); // Для проверки
@@ -197,8 +187,6 @@ new Vue({
                 const reg = new RegExp(searchString, 'i');
                 this.filterGoods = this.goods.filter((good) => reg.test(good.product_name));
                 this.isNotFiltered = false;
-
-
             }
 
         },
@@ -223,10 +211,10 @@ new Vue({
         },
 
         deleteBuy(id_buy) {
-            console.log(id_buy); // для проверки
+            // console.log(id_buy); // для проверки
 
             const index = this.buys.findIndex((item) => item.id_product == id_buy);
-            console.log(index); // для проверки
+            // console.log(index); // для проверки
             const deletePositionCart = this.buys[index];
             this.buysSumCounter -= deletePositionCart.price;
             // this.deleteCart(buy);
@@ -234,55 +222,50 @@ new Vue({
             this.buys.splice(index, 1);
             this.cart = this.buys;
 
-            console.log(deletePositionCart.price); // для проверки
-            console.log(this.buys); // для проверки
-            console.log(this.cart); // для проверки
+            // console.log(deletePositionCart.price); // для проверки
+            // console.log(this.buys); // для проверки
+            // console.log(this.cart); // для проверки
             this.deleteCart(deletePositionCart);
             this.sumBuys();
+            this.isAddToCart = true;
         },
 
-        addBuy(buy) { // добавить покупку в Корзину
+        addBuy(id_good) { // добавить покупку в Корзину
 
-            // console.log(buy); // Для проверки
-
-            // console.log(buy.id_product); // Для проверки
+            // console.log(id_good); // Для проверки
             // console.log(this.cart); // Для проверки
 
             if (this.cart.length > 0) {
 
                 this.cart.forEach((item) => {
-                    if (item.id_product == buy.id_product) {
+                    if (item.id_product == id_good) {
                         this.isAddToCart = false;
+                        this.showBuy();
                         return alert('Данный товар уже добавлен в Вашу корзину');
                     }
                 });
             }
 
             if (this.isAddToCart) {
-                // console.log(buy.id_product); // Для проверки
-                this.buys.push(buy);
+                const index = this.filterGoods.findIndex((item) => item.id_product == id_good);
+                // console.log(index); // для проверки
+                const addNewBuy = this.filterGoods[index];
+                // console.log(addNewBuy); // Для проверки
+                this.buys.push(addNewBuy);
                 this.cart = this.buys;
-                this.buysSumCounter += buy.price;
+                this.buysSumCounter += addNewBuy.price;
+                this.sumBuys();
+                this.addToCart(addNewBuy);
+
                 this.showBuy();
-                this.addToCart(buy);
             }
-
-
+            // console.log(this.buys); // Для проверки
 
         }
 
     },
 
     computed: {
-        // sumBuys() {
-        //     if (this.cart.length == 0 || this.buysSumCounter == 0) {
-        //         // console.log(this.cart); // Для проверки
-        //         this.cartTotal = 'В корзине пока нет покупок. Выберете товар в каталоге';
-        //     } else {
-        //         this.cartTotal = `Общая стоимость Ваших покупок составляет = ${this.buysSumCounter} руб.`;
-        //     }
-
-        // },
 
         sumCards() {
             if ((this.cardsSum = this.filterGoods.length) > 0) {

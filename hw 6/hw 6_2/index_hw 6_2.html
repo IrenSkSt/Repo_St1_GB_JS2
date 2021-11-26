@@ -62,7 +62,7 @@
                     <template v-else>
 
                         <!-- Карточка товара без фотки, которую отрисовываем к отфильтрованному списку (а с пустой строкой поиска - весь список, полученный с сервера) -->
-                        <catalog v-bind:list="filterGoods" v-on:add-to-cart="addToCart">
+                        <catalog v-bind:list="filterGoods" v-on:add-to-cart="addBuy">
                         </catalog>
                     </template>
 
