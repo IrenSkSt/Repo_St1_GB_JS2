@@ -1,6 +1,6 @@
-const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/';
+const API_URL = 'http://127.0.0.1:3000/';
 
-// новый код ДЗ 6
+// новый код ДЗ 7
 
 // поиск
 Vue.component('search', {
@@ -135,7 +135,7 @@ new Vue({
     },
     methods: {
         loadGoods() { // загрузка списка товаров с сервера
-            fetch(`${API_URL}catalogData.json`)
+            fetch(`${API_URL}catalogData`)
                 .then((request) => request.json())
                 .then((data) => {
                     this.goods = data;
@@ -150,7 +150,7 @@ new Vue({
         },
 
         loadCart() { // загрузка корзины с сервера
-            fetch(`${API_URL}getBasket.json`)
+            fetch(`${API_URL}cartData`)
                 .then((request) => request.json())
                 .then((data) => {
                     data.contents.forEach(item => { this.cart.push(item) });
@@ -162,14 +162,26 @@ new Vue({
                 })
         },
         addToCart(buy) { //отправка на сервер новой покупки
-            fetch(`${API_URL}addToBasket.json`)
+            fetch(`${API_URL}addToCart`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/JSON'
+                },
+                body: JSON.stringify(buy)
+            })
                 .then(() => {
                     console.log(buy)
 
                 })
         },
         deleteCart(buy) { //отправка на сервер удаленной покупки
-            fetch(`${API_URL}deleteFromBasket.json`)
+            fetch(`${API_URL}deleteFromCart`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/JSON'
+                },
+                body: JSON.stringify(buy)
+            })
                 .then(() => {
                     console.log(buy)
 
@@ -216,6 +228,8 @@ new Vue({
             const index = this.buys.findIndex((item) => item.id_product == id_buy);
             // console.log(index); // для проверки
             const deletePositionCart = this.buys[index];
+
+            // console.log(deletePositionCart.id); // для проверки
             this.buysSumCounter -= deletePositionCart.price;
             // this.deleteCart(buy);
             // this.buys.splice(index, 1);
